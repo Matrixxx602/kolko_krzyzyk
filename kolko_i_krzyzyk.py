@@ -14,6 +14,14 @@
 #   Pokazuje plansze
 #   Zmienia gracza
 
+# Stałe
+X = "X"
+O = "O"
+EMPTY = " "
+TIE = "REMIS"
+NUM_SQUARES = 9
+
+# Funkcja wyświetla instrukcje gry.
 def display_instruct():
     print('''
 Witaj w grze "Kółko i krzyżyk". Twoim zadaniem jest umieszczenie trzech takich samych
@@ -29,10 +37,32 @@ Liczba ta odpowiada pozycji na planszy zgodnie z poniższym schematem:
 Przygotuj się do gry. \n
     ''')
 
+# Funkcja zadaje pytanie, na które można odpowiedzieć "t"(tak) lub "n"(nie).
 def ask_yes_no(question):
     response = None
     while response not in ("t", "n"):
         response = input(question).lower()
     return response
 
+# Funkcja prosi o podanie liczby z pewnego zakresu.
+def ask_number(question, low, high):
+    response = None
+    while response not in range(low, high):
+        response = int(input(question))
+    return response
 
+# Funkcja pyta gracza czy chce zaczynać pierwszy i przypisuje wybór żetonu (X albo O).
+def pieces():
+    go_first = ask_yes_no("Czy chcesz pierwszy zacząć gre? (t/n): ")
+    if go_first == "t":
+        print("Pierwszy ruch należy do Ciebie...")
+        human = X
+        computer = O
+    else:
+        print("Pierwszy rozpoczyna komputer...")
+        human = O
+        computer = X
+    return human, computer
+
+# Funkcja tworzy nową pustą plansze do gry.
+# new_board()
