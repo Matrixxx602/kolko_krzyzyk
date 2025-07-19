@@ -65,4 +65,44 @@ def pieces():
     return human, computer
 
 # Funkcja tworzy nową pustą plansze do gry.
-# new_board()
+def new_board():
+    board = []
+    for square in range(NUM_SQUARES):
+        board.append(EMPTY)
+    return board
+
+# Funkcja wyświetla plansze do gry.
+def display_board(board):
+    print("\n\t\t", board[0], "|", board[1], "|", board[2])
+    print("\t\t---------")
+    print("\n\t\t", board[3], "|", board[4], "|", board[5])
+    print("\t\t---------")
+    print("\n\t\t", board[6], "|", board[7], "|", board[8], "\n")
+
+# Funkcja zwraca listę dozwolonych ruchów w turze.
+def legal_moves(board):
+    moves = []
+    for square in range(NUM_SQUARES):
+        if board[square] == EMPTY:
+            moves.append(square)
+    return moves
+
+# Funkcja zwraca wyngrany żeton (X lub O), remis (TIE) lub nic (None), aby określić wynik gry.
+def winner(board):
+    WAYS_TO_WIN = ((0, 1, 2), (3, 4, 5), (6, 7, 8),
+                   (0, 3, 6), (1, 4, 7), (2, 5, 8),
+                   (0, 4, 8), (2, 4, 6))
+
+    for row in WAYS_TO_WIN:
+        if board[row[0]] == board[row[1]] == board[row[2]] != EMPTY:
+            winner = board[row[0]]
+            return winner
+        
+    if EMPTY not in board:
+        return TIE
+
+    return None
+
+# Funkcja zwraca numer pola, w którym gracz chce umieścić żeton.
+def human_move():
+    
