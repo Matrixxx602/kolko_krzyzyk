@@ -60,9 +60,9 @@ def pieces():
         computer = O
     else:
         print("Pierwszy rozpoczyna komputer...")
-        human = O
         computer = X
-    return human, computer
+        human = O
+    return computer, human
 
 # Funkcja tworzy nową pustą plansze do gry.
 def new_board():
@@ -104,5 +104,85 @@ def winner(board):
     return None
 
 # Funkcja zwraca numer pola, w którym gracz chce umieścić żeton.
-def human_move():
+def human_move(board, human):
+    legal = legal_moves(board)
+    move = None
+    while move not in legal:
+        move = ask_number("Jaki będzie Twoj ruch? (0 - 8): ", 0, NUM_SQUARES)
+        if move not in legal:
+            print("\nTo pole jest już zajęte. Wybierz inne.\n")
+    print("Dobrze...")
+    return move
+
+# Funkcja zwraca numer pola, w którym komputer umieści swój ruch.
+def computer_move(board, computer, human):
+    board = board[:]
+    BEST_MOVES = (4, 0, 2, 6, 8, 1, 3, 5, 7)
+    print("Wybieram pole numer...", end=" ")
+
+    for move in legal_moves(board):
+        board[move] = computer
+        if winner(board) == computer:
+            print(move)
+            return move
+        board[move] = EMPTY
     
+    for move in legal_moves(board):
+        board[move] = human
+        if winner(board) == human:
+            print(move)
+            return move
+        board[move] = EMPTY
+
+    for move in BEST_MOVES:
+        if move in legal_moves(board):
+            print(move)
+            return move
+        
+# Funkcja zmienia gracza po wykonaniu ruchu.
+def next_turn(turn):
+    if turn == X:
+        return O
+    else:
+        return X
+    
+# Funkcja zwraca wynik końcowy gry.
+def congrat_winner(the_winner, computer, human):
+    if the_winner != TIE:
+        print(f"{the_winner} jest zwyciężcą!\n")
+    else:
+        print("REMIS!\n")
+
+    if the_winner == computer:
+        print("Komputer wygrał!")
+    elif the_winner == human:
+        print("Wygrałeś! Gratulacje!")
+    else:
+        print("Miałeś mnóstwo szcześcia, niełatwo jest zremisować, a co dopiero wygrać z komputerem!")
+
+# Funkcja głowna, która steruje całą grą.
+def main():
+    display_instruct()
+    computer, human = pieces()
+    turn = X
+    board = new_board()
+    display_board(board)
+
+    while not winner(board):
+        if turn == human:
+            move = human_move(board, human)
+            board[move] = human
+        else:
+            move = computer_move(board, computer, human)
+            board[move] = computer
+        display_board(board)
+        turn = next_turn(turn)
+    
+    the_winner = winner(board)
+    congrat_winner(the_winner, computer, human)
+
+
+
+# Rozpoczęcie gry
+main()
+input("\n\nAby zakończyć grę, naciśnij klawisz ENTER.")
